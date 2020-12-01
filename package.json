@@ -3,5 +3,8 @@
   "version": "0.1.0",
   "description": "Unofficial SecretHub manager for simple projects",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "@secrethub/cli": "^0.41.2"
+  }
 }
