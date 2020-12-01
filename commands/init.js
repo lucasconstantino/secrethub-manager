@@ -24,7 +24,7 @@ module.exports = new Command()
     execSync(
       `SECRETHUB_CREDENTIAL=${await credential()} secrethub inject --no-prompt ${variables.join(
         " "
-      )} -i secrethub.env > ./.env`,
+      )} -i ${config.template} > ${config.target}`,
       { stdio: "inherit" }
     );
   });
