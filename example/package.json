@@ -1,0 +1,26 @@
+{
+  "name": "secrethub-manager-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "secrethub-manager": "../"
+  },
+  "secrethub": {
+    "path": "demo--strv/start",
+    "variables": {
+      "env": {
+        "type": "select",
+        "message": "What environment you want to initialize?",
+        "choices": [
+          "development",
+          "qa",
+          "staging",
+          "production"
+        ],
+        "initial": "development"
+      }
+    }
+  }
+}
