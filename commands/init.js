@@ -16,7 +16,9 @@ module.exports = new Command()
       variables.push(
         `--var ${name}=${
           process.env[envName] ||
-          (await prompt({ ...variable, required: true, name }))[name]
+          (await prompt({ ...variable, type: "select", required: true, name }))[
+            name
+          ]
         }`
       );
     }

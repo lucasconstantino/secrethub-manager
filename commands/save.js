@@ -64,7 +64,7 @@ module.exports = new Command()
     }
 
     for (const [key, value] of Object.entries(write)) {
-      console.log(`Saving new value for ${key}`);
+      console.log(`> Saving new value for ${key}`);
 
       execSync(
         `echo "${value}" | SECRETHUB_CREDENTIAL=${await credential()} secrethub write ${key}`
