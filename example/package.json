@@ -18,8 +18,7 @@
           "qa",
           "staging",
           "production"
-        ],
-        "initial": "development"
+        ]
       }
     }
   }
