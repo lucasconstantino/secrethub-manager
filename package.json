@@ -4,6 +4,9 @@
   "description": "Unofficial SecretHub manager for simple projects",
   "license": "MIT",
   "private": false,
+  "bin": {
+    "secrethub-manager": "./bin/secrethub-manager"
+  },
   "dependencies": {
     "@secrethub/cli": "^0.41.2"
   }
