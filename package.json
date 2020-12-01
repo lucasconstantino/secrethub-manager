@@ -8,6 +8,8 @@
     "secrethub-manager": "./bin/secrethub-manager"
   },
   "dependencies": {
-    "@secrethub/cli": "^0.41.2"
+    "@secrethub/cli": "^0.41.2",
+    "commander": "^6.2.0",
+    "enquirer": "^2.3.6"
   }
 }
