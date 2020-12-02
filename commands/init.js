@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 const { Command } = require("commander");
@@ -15,11 +16,14 @@ module.exports = new Command()
     config.template
   )
   .option("-f, --file <file>", "Output env file", config.file)
-  .action(async ({ template, file }) => {
+  .option("-s, --skip", "Skip if output env file already exists", false)
+  .action(async ({ template, file, skip }) => {
     const paths = {
       template: path.resolve(process.cwd(), template),
       file: path.resolve(process.cwd(), file),
     };
+
+    if (skip && fs.existsSync(paths.file)) return;
 
     const vars = (await variables.all()).map(
       ([name, value]) => `--var ${name}=${value}`
