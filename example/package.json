@@ -11,6 +11,7 @@
     "path": "demo--strv/start",
     "variables": {
       "env": {
+        "env_name": "ENV_NAME",
         "message": "What environment you want to initialize?",
         "choices": [
           "development",
