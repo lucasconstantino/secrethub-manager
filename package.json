@@ -1,7 +1,7 @@
 {
   "name": "secrethub-manager",
   "version": "0.1.0",
-  "description": "Unofficial SecretHub manager for simple projects",
+  "description": "Unofficial SecretHub opinionated manager for simple projects",
   "license": "MIT",
   "private": false,
   "bin": {
