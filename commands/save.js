@@ -8,22 +8,28 @@ const config = require("../lib/config");
 const { signed } = require("../lib/credential");
 const variables = require("../lib/variables");
 
-const paths = {
-  template: path.resolve(process.cwd(), config.template),
-  out: path.resolve(process.cwd(), config.out),
-};
-
 const keyRegEx = /{{ (?<key>.+) }}/;
 
 module.exports = new Command()
   .command("save")
   .description("Saves .env file content to secrethub based on template")
-  .action(async () => {
+  .option(
+    "-t, --template <template>",
+    "SecretHub template file",
+    config.template
+  )
+  .option("-f, --file <file>", "Env file", config.file)
+  .action(async ({ template, file }) => {
+    const paths = {
+      template: path.resolve(process.cwd(), template),
+      file: path.resolve(process.cwd(), file),
+    };
+
     const vars = await variables.all();
 
     const contents = {
       template: fs.readFileSync(paths.template, "utf-8"),
-      current: fs.readFileSync(paths.out, "utf-8"),
+      current: fs.readFileSync(paths.file, "utf-8"),
     };
 
     const envs = {
