@@ -4,6 +4,7 @@ const { execSync } = require("child_process");
 const { Command } = require("commander");
 
 const config = require("../../lib/config");
+const secrethub = require("../../lib/secrethub");
 const { signed } = require("../../lib/credential");
 
 const manager = path.resolve(process.cwd(), "./.secrethub/manager");
@@ -17,7 +18,7 @@ const getPaths = (_parent, env) => {
 
   console.log(`> Opening "${parent}" dir`);
 
-  const paths = execSync(`secrethub ls ${parent} -q`, { env })
+  const paths = execSync(`${secrethub} ls ${parent} -q`, { env })
     .toString()
     .split("\n")
     .filter(Boolean);
@@ -87,7 +88,7 @@ module.exports = new Command()
     // fulfil template
     fs.writeFileSync(
       manager,
-      execSync(`secrethub inject -i ${manager}`, { env }),
+      execSync(`${secrethub} inject -i ${manager}`, { env }),
       "utf8"
     );
 

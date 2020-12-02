@@ -2,6 +2,7 @@ const path = require("path");
 const { execSync } = require("child_process");
 const { Command } = require("commander");
 const config = require("../lib/config");
+const secrethub = require("../lib/secrethub");
 const { signed } = require("../lib/credential");
 const variables = require("../lib/variables");
 
@@ -25,9 +26,9 @@ module.exports = new Command()
     );
 
     execSync(
-      `secrethub inject --no-prompt ${vars.join(" ")} -i ${paths.template} > ${
-        paths.file
-      }`,
+      `${secrethub} inject --no-prompt ${vars.join(" ")} -i ${
+        paths.template
+      } > ${paths.file}`,
       { stdio: "inherit", env: await signed() }
     );
   });

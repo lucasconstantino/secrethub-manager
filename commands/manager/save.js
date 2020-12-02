@@ -5,6 +5,7 @@ const { Command } = require("commander");
 const { prompt } = require("enquirer");
 const { parse } = require("envfile");
 
+const secrethub = require("../../lib/secrethub");
 const { signed } = require("../../lib/credential");
 const manager = path.resolve(process.cwd(), "./.secrethub/manager");
 
@@ -26,7 +27,7 @@ module.exports = new Command()
 
       try {
         const changed =
-          execSync(`secrethub read ${key}`, { env })
+          execSync(`${secrethub} read ${key}`, { env })
             .toString()
             .replace("\n", "") !== value;
 
@@ -54,7 +55,7 @@ module.exports = new Command()
       for (const key of toUpdate) {
         const value = envs[key];
         console.log(`> Updating "${key}"`);
-        execSync(`echo "${value}" | secrethub write ${key}`, { env });
+        execSync(`echo "${value}" | ${secrethub} write ${key}`, { env });
       }
 
       console.log("> Finished updating secrets");

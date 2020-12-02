@@ -4,6 +4,7 @@ const { execSync } = require("child_process");
 const { Command } = require("commander");
 const { parse } = require("envfile");
 
+const secrethub = require("../lib/secrethub");
 const config = require("../lib/config");
 const { signed } = require("../lib/credential");
 const variables = require("../lib/variables");
@@ -61,7 +62,7 @@ module.exports = new Command()
 
     for (const [key, value] of Object.entries(write)) {
       console.log(`> Saving new value for ${key}`);
-      execSync(`echo "${value}" | secrethub write ${key}`, {
+      execSync(`echo "${value}" | ${secrethub} write ${key}`, {
         env: await signed(),
       });
     }
