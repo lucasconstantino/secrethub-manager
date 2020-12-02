@@ -4,20 +4,20 @@ const { execSync } = require("child_process");
 const { Command } = require("commander");
 
 const config = require("../../lib/config");
-const credential = require("../../lib/credential");
+const { signed } = require("../../lib/credential");
 
 const manager = path.resolve(process.cwd(), "./.secrethub/manager");
 
 /**
  * Recursive path loader.
  */
-const getPaths = (_parent) => {
+const getPaths = (_parent, env) => {
   const parent = _parent.replace(/\/$/, "");
   const children = [];
 
   console.log(`> Opening "${parent}" dir`);
 
-  const paths = execSync(`secrethub ls ${parent} -q`)
+  const paths = execSync(`secrethub ls ${parent} -q`, { env })
     .toString()
     .split("\n")
     .filter(Boolean);
@@ -26,7 +26,7 @@ const getPaths = (_parent) => {
     const key = `${parent}/${path}`;
 
     if (path.endsWith("/")) {
-      children.push(...getPaths(key));
+      children.push(...getPaths(key, env));
     } else {
       children.push(key);
     }
@@ -61,7 +61,9 @@ module.exports = new Command()
     "Download .secrethub/manager file for easier setup of all environments"
   )
   .action(async () => {
-    const paths = getPaths(config.path);
+    const env = await signed();
+
+    const paths = getPaths(config.path, env);
     const width = paths.sort((a, b) => b.length - a.length)[0].length;
     const sorted = paths.reverse().sort(sortKeys);
 
@@ -85,9 +87,7 @@ module.exports = new Command()
     // fulfil template
     fs.writeFileSync(
       manager,
-      execSync(
-        `SECRETHUB_CREDENTIAL=${await credential()} secrethub inject -i ${manager}`
-      ),
+      execSync(`secrethub inject -i ${manager}`, { env }),
       "utf8"
     );
 

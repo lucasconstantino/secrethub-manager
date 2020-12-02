@@ -5,7 +5,7 @@ const { Command } = require("commander");
 const { prompt } = require("enquirer");
 const { parse } = require("envfile");
 
-const credential = require("../../lib/credential");
+const { signed } = require("../../lib/credential");
 const manager = path.resolve(process.cwd(), "./.secrethub/manager");
 
 module.exports = new Command()
@@ -16,7 +16,8 @@ module.exports = new Command()
       throw new Error(`No manager found at ${manager}`);
     }
 
-    const ENV = `SECRETHUB_CREDENTIAL=${await credential()}`;
+    const env = await signed();
+
     const envs = parse(fs.readFileSync(manager, "utf-8"));
     const modified = [];
 
@@ -25,7 +26,7 @@ module.exports = new Command()
 
       try {
         const changed =
-          execSync(`${ENV} secrethub read ${key}`)
+          execSync(`secrethub read ${key}`, { env })
             .toString()
             .replace("\n", "") !== value;
 
@@ -53,7 +54,7 @@ module.exports = new Command()
       for (const key of toUpdate) {
         const value = envs[key];
         console.log(`> Updating "${key}"`);
-        execSync(`echo "${value}" | secrethub write ${key}`);
+        execSync(`echo "${value}" | secrethub write ${key}`, { env });
       }
 
       console.log("> Finished updating secrets");

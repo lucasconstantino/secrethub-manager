@@ -2,11 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 const { Command } = require("commander");
-const { prompt } = require("enquirer");
 const { parse } = require("envfile");
 
 const config = require("../lib/config");
-const credential = require("../lib/credential");
+const { signed } = require("../lib/credential");
+const variables = require("../lib/variables");
 
 const paths = {
   template: path.resolve(process.cwd(), config.template),
@@ -19,17 +19,7 @@ module.exports = new Command()
   .command("save")
   .description("Saves .env file content to secrethub based on template")
   .action(async () => {
-    const variables = [];
-
-    for (const [name, variable] of Object.entries(config.variables)) {
-      const envName = `SECRETHUB_MANAGER_${name.toUpperCase()}`;
-
-      variables.push([
-        name,
-        process.env[envName] ||
-          (await prompt({ ...variable, required: true, name }))[name],
-      ]);
-    }
+    const vars = await variables.all();
 
     const contents = {
       template: fs.readFileSync(paths.template, "utf-8"),
@@ -54,7 +44,7 @@ module.exports = new Command()
         }
 
         // Replace variable path.
-        const key = variables.reduce(
+        const key = vars.reduce(
           (key, [name, value]) => key.replace(`$${name}`, value),
           match.groups.key
         );
@@ -65,9 +55,8 @@ module.exports = new Command()
 
     for (const [key, value] of Object.entries(write)) {
       console.log(`> Saving new value for ${key}`);
-
-      execSync(
-        `echo "${value}" | SECRETHUB_CREDENTIAL=${await credential()} secrethub write ${key}`
-      );
+      execSync(`echo "${value}" | secrethub write ${key}`, {
+        env: await signed(),
+      });
     }
   });
