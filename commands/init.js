@@ -23,6 +23,8 @@ module.exports = new Command()
       file: path.resolve(process.cwd(), file),
     };
 
+    console.log(`> Initializing environment file ${file}`);
+
     if (skip && fs.existsSync(paths.file)) return;
 
     const vars = (await variables.all()).map(
