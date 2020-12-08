@@ -5,7 +5,11 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "postinstall-postinstall": "^2.1.0",
     "secrethub-manager": "../"
+  },
+  "scripts": {
+    "postinstall": "secrethub-manager init -s -w"
   },
   "secrethub": {
     "path": "demo--strv/start",
