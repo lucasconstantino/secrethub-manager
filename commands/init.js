@@ -17,11 +17,14 @@ module.exports = new Command()
   )
   .option("-f, --file <file>", "Output env file", config.file)
   .option("-s, --skip", "Skip if output env file already exists", false)
-  .action(async ({ template, file, skip }) => {
+  .option("-w, --wait", "Wait for @secrethub/cli install", false)
+  .action(async ({ template, file, skip, wait }) => {
     const paths = {
       template: path.resolve(process.cwd(), template),
       file: path.resolve(process.cwd(), file),
     };
+
+    if (wait) await secrethub.ready();
 
     console.log(`> Initializing environment file ${file}`);
 
@@ -32,7 +35,7 @@ module.exports = new Command()
     );
 
     execSync(
-      `${secrethub} inject --no-prompt ${vars.join(" ")} -i ${
+      `${secrethub.bin} inject --no-prompt ${vars.join(" ")} -i ${
         paths.template
       } > ${paths.file}`,
       { stdio: "inherit", env: await signed() }

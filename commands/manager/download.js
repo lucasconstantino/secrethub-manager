@@ -18,7 +18,7 @@ const getPaths = (_parent, env) => {
 
   console.log(`> Opening "${parent}" dir`);
 
-  const paths = execSync(`${secrethub} ls ${parent} -q`, { env })
+  const paths = execSync(`${secrethub.bin} ls ${parent} -q`, { env })
     .toString()
     .split("\n")
     .filter(Boolean);
@@ -88,7 +88,7 @@ module.exports = new Command()
     // fulfil template
     fs.writeFileSync(
       manager,
-      execSync(`${secrethub} inject -i ${manager}`, { env }),
+      execSync(`${secrethub.bin} inject -i ${manager}`, { env }),
       "utf8"
     );
 

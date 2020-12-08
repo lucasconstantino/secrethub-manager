@@ -62,7 +62,7 @@ module.exports = new Command()
 
     for (const [key, value] of Object.entries(write)) {
       console.log(`> Saving new value for ${key}`);
-      execSync(`echo "${value}" | ${secrethub} write ${key}`, {
+      execSync(`echo "${value}" | ${secrethub.bin} write ${key}`, {
         env: await signed(),
       });
     }

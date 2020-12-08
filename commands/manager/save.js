@@ -27,7 +27,7 @@ module.exports = new Command()
 
       try {
         const changed =
-          execSync(`${secrethub} read ${key}`, { env })
+          execSync(`${secrethub.bin} read ${key}`, { env })
             .toString()
             .replace("\n", "") !== value;
 
@@ -55,7 +55,7 @@ module.exports = new Command()
       for (const key of toUpdate) {
         const value = envs[key];
         console.log(`> Updating "${key}"`);
-        execSync(`echo "${value}" | ${secrethub} write ${key}`, { env });
+        execSync(`echo "${value}" | ${secrethub.bin} write ${key}`, { env });
       }
 
       console.log("> Finished updating secrets");
