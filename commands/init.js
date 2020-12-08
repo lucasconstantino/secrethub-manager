@@ -24,11 +24,11 @@ module.exports = new Command()
       file: path.resolve(process.cwd(), file),
     };
 
-    if (wait) await secrethub.ready();
-
     console.log(`> Initializing environment file ${file}`);
 
     if (skip && fs.existsSync(paths.file)) return;
+
+    if (wait) await secrethub.ready();
 
     const vars = (await variables.all()).map(
       ([name, value]) => `--var ${name}=${value}`
